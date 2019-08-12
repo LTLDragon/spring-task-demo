@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:mvc="http://www.springframework.org/schema/mvc" 
+		xmlns:task="http://www.springframework.org/schema/task"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context.xsd
+			http://www.springframework.org/schema/mvc
+			http://www.springframework.org/schema/mvc/spring-mvc.xsd
+			http://www.springframework.org/schema/task
+			http://www.springframework.org/schema/task/spring-task.xsd">
+
+	<context:annotation-config />
+
+	<!-- 开启这个配置，spring才能识别@Scheduled注解 -->
+	<task:annotation-driven scheduler="taskScheduler"/>
+
+	<!-- spring扫描注解的配置 -->
+	<context:component-scan base-package="com.ltl.task" />
+	<!-- 配置定时任务的线程池 -->
+	<task:scheduler id="taskScheduler" pool-size="100"/>
+
+	<task:scheduled-tasks scheduler="taskScheduler">
+		<!--每分钟30秒时触发(cron中的参数为 秒 分 时 日 月 星期 年) -->
+		<task:scheduled ref="taskDemo" method="execute1" cron="30 * * * * ?"/>
+		<!--每5秒执行一次 -->
+		<task:scheduled ref="taskDemo" method="execute2" cron="0/5 * * * * ?"/>
+
+
+	</task:scheduled-tasks>
+	
+</beans>
